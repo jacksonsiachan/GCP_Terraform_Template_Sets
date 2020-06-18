@@ -20,16 +20,14 @@ variable "allow_stopping_for_update" {
 
 }
 
-variable "image" {
+variable "boot_disk_type" {
      type = string
-     default = "debian-cloud/debian-9"
-
+     default = "pd-standard"
 }
 
 variable "network" {
      type = string
      default = "default"
-
 }
 
 variable "servers" {
@@ -46,4 +44,10 @@ variable "project" {
 variable "region" {
     type = string
     default = "asia-southeast1"
+}
+
+variable "firewall_ports" {
+    type = list
+    default = ["80", "8080", "1000-2000"]
+
 }
