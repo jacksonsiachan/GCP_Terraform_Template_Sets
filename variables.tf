@@ -57,3 +57,15 @@ variable "region" {
   type    = string
   default = "asia-southeast1"
 }
+
+variable "script_path" {
+  type        = "string"
+}
+
+variable "private_key_path" {
+  type        = "string"
+}
+
+variable "username" {
+  type        = "string"
+}

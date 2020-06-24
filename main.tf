@@ -14,16 +14,31 @@ resource "google_compute_instance" "vm_instance" {
   zone                      = var.zone
   allow_stopping_for_update = var.allow_stopping_for_update
   count                     = var.servers
+     provisioner "remote-exec" {
 
-  boot_disk {
-    initialize_params {
-      image = data.google_compute_image.webserver_image.self_link
-      type  = var.boot_disk_type
-    }
+        script = var.script_path
+
+        connection {
+          type = "ssh"
+          host = google_compute_instance.static.address
+          user = var.username
+          private_key = file(var.private_key_path)
+
+        }
+      }
+      boot_disk {
+          initialize_params {
+              image = data.google_compute_image.webserver_image.self_link
+              type  = var.boot_disk_type
+      }
   }
 
   network_interface {
     network = google_compute_network.data_center.name
+
+    access_config = {
+      nat_ip = google_compute_address.static.address
+    }
   }
   tags = ["web"]
 }
@@ -45,4 +60,9 @@ resource "google_compute_firewall" "web_traffic" {
     protocol = "tcp"
   }
   source_tags = ["web"]
+}
+
+resource "google_compute_address" "static" {
+   name = "vm-public-address"
+
 }
